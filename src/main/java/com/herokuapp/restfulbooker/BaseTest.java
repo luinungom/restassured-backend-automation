@@ -62,4 +62,22 @@ public class BaseTest {
 				body(body.toString()).put("https://restful-booker.herokuapp.com/booking/"+bookingId);
 		return response;
 	}
+	
+	public static Response partialUpdateBooking(int bookingId) {
+		// Create JSON body
+		JSONObject body = new JSONObject();
+		body.put("firstname", "Jeremias");
+		
+		// Generate a second JSON for inner level parameters
+		JSONObject bodyDates = new JSONObject();
+		bodyDates.put("checkin", "2025-12-31");
+		
+		// Insert the second JSON in the first one
+		body.put("bookingdates", bodyDates);
+		
+		// Get response
+		Response response = RestAssured.given().auth().preemptive().basic("admin", "password123").contentType(ContentType.JSON).
+				body(body.toString()).patch("https://restful-booker.herokuapp.com/booking/"+bookingId);
+		return response;
+	}
 }
