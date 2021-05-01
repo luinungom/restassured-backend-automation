@@ -4,12 +4,14 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
+import com.herokuapp.restfulbooker.BaseTest;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
 import java.util.List;
 
-public class GetBookingIdsTests {
+public class GetBookingIdsTests extends BaseTest{
 
 	@Test
 	public void getBookingIdsWithoutFilterTest() {
@@ -25,8 +27,7 @@ public class GetBookingIdsTests {
 	@Test
 	public void getBookingWithIdsTest() {
 		// Get response with booking ids
-		CreateBookingTests newBooking = new CreateBookingTests();
-		Response response = newBooking.createBooking();
+		Response response = BaseTest.createBooking();
 		// Check if response code equals 200
 		Assert.assertEquals(response.statusCode(), 200, "Status code is not 200");
 		// Check if first name equals Sally
