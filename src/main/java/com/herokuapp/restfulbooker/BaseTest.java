@@ -11,11 +11,11 @@ import io.restassured.specification.RequestSpecification;
 
 public class BaseTest {
 	
-	protected static RequestSpecification specURL;
+	protected static RequestSpecification spec;
 	
 	@BeforeMethod
 	protected void setUp() {
-		specURL = new RequestSpecBuilder().
+		spec = new RequestSpecBuilder().
 				setBaseUri("https://restful-booker.herokuapp.com").build();
 	}
 
@@ -44,7 +44,24 @@ public class BaseTest {
 		body.put("additionalneeds", "minibar");
 
 		// Get response
-		Response response = RestAssured.given(specURL).contentType(ContentType.JSON).body(body.toString()).post("/booking");
+		Response response = RestAssured.given(spec).contentType(ContentType.JSON).body(body.toString()).post("/booking");
+		return response;
+	}
+	
+	/**
+	 * Creates a booking using POJO
+	 * 
+	 * @return response
+	 */
+	protected static Response createBookingWithPOJO() {
+		// Create dates
+		BookingDates pojoDates = new BookingDates("2020-05-20", "2020-05-22");
+		// Create a Booking object
+		Booking pojoBooking = new Booking("Luis", "Nunies", 777, true, pojoDates, "minibar");
+
+		// Get response
+		Response response = RestAssured.given(spec).contentType(ContentType.JSON).body(pojoBooking).post("/booking");
+		response.print();
 		return response;
 	}
 
@@ -68,7 +85,7 @@ public class BaseTest {
 		body.put("additionalneeds", "parking");
 
 		// Get response
-		Response response = RestAssured.given(specURL).auth().preemptive().basic("admin", "password123").contentType(ContentType.JSON).
+		Response response = RestAssured.given(spec).auth().preemptive().basic("admin", "password123").contentType(ContentType.JSON).
 				body(body.toString()).put("/booking/"+bookingId);
 		return response;
 	}
@@ -86,7 +103,7 @@ public class BaseTest {
 		body.put("bookingdates", bodyDates);
 		
 		// Get response
-		Response response = RestAssured.given(specURL).auth().preemptive().basic("admin", "password123").contentType(ContentType.JSON).
+		Response response = RestAssured.given(spec).auth().preemptive().basic("admin", "password123").contentType(ContentType.JSON).
 				body(body.toString()).patch("/booking/"+bookingId);
 		return response;
 	}
